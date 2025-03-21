@@ -12,14 +12,16 @@ def bfs(si ,sj ,ei ,ej):
 
         for di,dj in ((-1,0),(1,0),(0,-1),(0,1)):
             ni, nj = ci+di,cj+dj
-            if 0<=ni<N and 0<=nj<M and arr[ni][nj] ==1 and v[ni][nj] ==0:
+            if 0<=ni<N and 0<=nj<M and graph[ni][nj] ==1 and v[ni][nj] ==0:
                 q.append((ni,nj))
                 v[ni][nj] = v[ci][cj] +1
 
 
 
 N,M = map(int, input().split())
-arr = [list(map(int,input())) for _ in range(N)]
+graph=[]
+for i in range(N):
+    graph.append(list(map(int, input())))
 
 
 ans = bfs(0, 0, N-1, M-1)
