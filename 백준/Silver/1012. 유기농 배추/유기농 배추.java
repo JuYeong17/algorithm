@@ -1,57 +1,56 @@
 import java.io.*;
-import java.util.*;
- 
- 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.StringTokenizer;
+
 public class Main {
-    static int[][] map; 
-    static int d, c, min = Integer.MAX_VALUE;
-    static int where;
-    static int temp;
-    static int[] x = {0, 0, 1, -1}, y = {1, -1, 0, 0}; 
- 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-        int t = Integer.parseInt(br.readLine());
-        for (int i = 0; i < t; i++) {
-            String[] s = br.readLine().split(" ");
-            c = Integer.parseInt(s[0]);
-            d = Integer.parseInt(s[1]);
-            where = Integer.parseInt(s[2]);
-            map = new int[c][d];
-            for (int j = 0; j < where; j++) {
-                int a, b;
-                String[] s1 = br.readLine().split(" ");
-                a = Integer.parseInt(s1[0]);
-                b = Integer.parseInt(s1[1]);
-                map[a][b] = 1;
-            }
-            for (int j = 0; j < c; j++) {
-                for (int k = 0; k < d; k++) {
-                    if (map[j][k] == 1) {
-                        dfs(j, k);
-                        temp++;
-                    }
-                }
-            }
-            min = temp;
-            temp = 0;
-            System.out.println(min);
+  static int[][] graph;
+
+  static boolean[][] visited;
+  static void dfs(int x, int y){
+    visited[x][y] = false;
+    int[] dx = {1,-1,0,0};
+    int[] dy = {0,0,1,-1};
+
+    for(int d=0;d<4;d++){
+      int nx= x+dx[d];
+      int ny = y+dy[d];
+      if(nx >= 0 && nx < graph.length && ny>=0 && ny<graph[0].length){
+        if(graph[nx][ny] == 1 && visited[nx][ny]){
+          dfs(nx,ny);
         }
+      }
     }
- 
-    public static void dfs(int c1, int d1) {
-        if (map[c1][d1] == 0) {
-            return;
+  }
+
+  public static void main(String[] args) throws IOException {
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    int T = Integer.parseInt(br.readLine());
+    for (int t = 0; t < T; t++) {
+      StringTokenizer input = new StringTokenizer(br.readLine());
+      int M = Integer.parseInt(input.nextToken());
+      int N = Integer.parseInt(input.nextToken());
+      int K = Integer.parseInt(input.nextToken());
+      graph = new int[M][N];
+      visited = new boolean[M][N];
+      for (int i = 0; i < K; i++) {
+        StringTokenizer input2 = new StringTokenizer(br.readLine());
+        int x = Integer.parseInt(input2.nextToken());
+        int y = Integer.parseInt(input2.nextToken());
+        graph[x][y] = 1;
+        visited[x][y] = true;
+      }
+      int count = 0;
+      for (int i = 0; i < M; i++) {
+        for (int j = 0; j < N; j++) {
+          if (visited[i][j]) {
+            dfs(i, j);
+            count++;
+          }
         }
-        map[c1][d1]=0;
- 
-        for (int i = 0; i < 4; i++) {
-            int i1 = c1 + x[i];
-            int i2 = d1 + y[i];
-            if (i1 >= 0 && i1 < c && i2 >= 0 && i2 < d) {
-                dfs(i1, i2);
-            }
-        }
+      }
+      System.out.println(count);
     }
+  }
 }
