@@ -1,63 +1,62 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class Main {
-	
-	static int[][] danji;
-	static boolean[][] visited;
-	static int[] dx = {0,0,-1,1};
-	static int[] dy = {-1,1,0,0};
-	static List<Integer> result;
-	static int cnt, N;
+  static int[][] graph;
+  static boolean[][] visited;
+  static List<Integer> result = new ArrayList<>();;
+  static int totalN;
+  static void dfs(int x, int y){
+    visited[x][y] = false;
+    int[] dx= {1,-1,0,0};
+    int[] dy = {0,0,1,-1};
+    for(int i=0;i<4;i++){
+      int nx= x+dx[i];
+      int ny= y+dy[i];
+      if(nx >= 0 && nx<graph.length && ny >= 0&& ny<graph[0].length){
+        if(graph[nx][ny] == 1 && visited[nx][ny]){
+          totalN++;
+          dfs(nx,ny);
+        }
+      }
+    }
+  }
 
-	public static void main(String[] args) throws IOException{
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		
-		result = new LinkedList<>(); 
-		N = Integer.parseInt(br.readLine());
-		danji = new int[N][N];
-		visited = new boolean[N][N]; 
-		cnt = 1;
-		
-		for(int i=0;i<N;i++) {
-			String str = br.readLine();
-			for(int j=0;j<N;j++) {
-				danji[i][j] = str.charAt(j)-'0';
-			}
-		}
-		
-		
-		for(int x=0;x<N;x++) {
-			for(int y=0;y<N;y++) {
-				if(danji[x][y]==1 && !visited[x][y]) {
-					dfs(x,y);
-					result.add(cnt);
-					cnt = 1;
-				}
-			}
-		}
-		
-		Collections.sort(result);
-		
-		bw.write(result.size()+"\n");
-		for(int r : result) bw.write(r+"\n");
-		bw.flush();
-		bw.close();
+  public static void main(String[] args) throws IOException {
+    BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
+    int N = Integer.parseInt(br.readLine());
+    graph = new int[N][N];
+    visited= new boolean[N][N];
+    for(int i=0;i<N;i++){
+      String[] M = br.readLine().split("");
+      for(int j=0;j<N;j++){
+        graph[i][j] = Integer.parseInt(M[j]);
+      }
+    }
 
-	}
-	
-	public static void dfs(int x, int y) {
-		visited[x][y] = true;
-		
-		for(int i=0;i<4;i++) {
-			int nx = dx[i]+x;
-			int ny = dy[i]+y;
-			
-			if(nx>=0 && ny>=0 && nx<N && ny<N && !visited[nx][ny] && danji[nx][ny]==1) {
-				cnt++;
-				dfs(nx,ny);
-			}
-		}
-	}
+    for(int i=0;i<N;i++){
+      for(int j=0;j<N;j++){
+        if(graph[i][j]== 1){
+          visited[i][j] = true;
+        }
+      }
+    }
+    int total=0;
+
+    for(int i=0;i<N;i++){
+      for(int j=0;j<N;j++) {
+        if (visited[i][j]) {
+          totalN = 1;
+          dfs(i, j);
+          result.add(totalN);
+          total++;
+        }
+      }
+    }
+    Collections.sort(result);
+    System.out.println(total);
+    for(int res: result){
+      System.out.println(res);
+    }
+  }
 }
