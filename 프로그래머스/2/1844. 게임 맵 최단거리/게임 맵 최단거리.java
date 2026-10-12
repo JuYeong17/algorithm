@@ -1,4 +1,6 @@
 import java.util.*;
+//큐에 출발 순서 넣기 -> 출발순서에서 벽이 없는 위치 큐에 넣기 -> 해당 사이클 반복 후 n,m 위치에 있는 곳에 도달하면 distance 반환
+
 
 class Solution {
     public int solution(int[][] maps) {
@@ -6,35 +8,33 @@ class Solution {
         int n = maps.length;
         int m = maps[0].length;
         boolean[][] visited = new boolean[n][m];
+        int[] dx ={0,-1,1,0};
+        int[] dy ={1,0,0,-1};
         for(int i=0;i<maps.length;i++){
             for(int j=0;j<maps[0].length;j++){
-                if(maps[i][j] == 0){
-                    visited[i][j] = true;
-                }
-                else visited[i][j] = false;
+                if(maps[i][j] == 1) visited[i][j] = true;
             }
         }
-    
-        int[] dx = {1,0,-1,0};
-        int[] dy = {0,-1,0,1};
-        q.add(new int[]{0, 0, 1});
+        
+        q.add(new int[]{0,0,1});
+        visited[0][0] = false;
         while(!q.isEmpty()){
             int[] current = q.poll();
             int x = current[0];
             int y = current[1];
-            int distance = current[2];
+            int d = current[2];
             for(int i=0;i<dx.length;i++){
-                int nx = x+ dx[i];
-                int ny = y+ dy[i];
+                int nx = x + dx[i];
+                int ny = y + dy[i];
                 if(nx >= 0 && ny >= 0 && nx < n && ny < m){
-                    if(!visited[nx][ny]){
-                        visited[nx][ny] = true;
-                        q.add(new int[]{nx,ny, distance + 1});
+                    if(visited[nx][ny]){
+                        visited[nx][ny] = false;
+                        q.add(new int[]{nx, ny,d+1});                        
                     }
                 }
             }
-            if (x == n - 1 && y == m - 1) {
-                return distance;
+            if(x == n-1 && y== m-1){
+                return d;
             }
         }
         return -1;
